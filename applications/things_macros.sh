@@ -1,0 +1,1 @@
+alias things.todo='${BASH_SOURCE%/*}/things_todo.sh'
