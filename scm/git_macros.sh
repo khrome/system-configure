@@ -5,6 +5,18 @@ git.current.tag(){
     echo $(git describe $(git rev-list --tags --max-count=1))
 }
 
+git.oldest.commit(){
+    diff -u <(git rev-list --first-parent ${1:-master}) <(git rev-list --first-parent ${2:-HEAD}) | sed -ne 's/^ //p' | head -1
+}
+
+git.newest.commit(){
+    git log ${1:-master} -1 | head -1 | cut -d' ' -f 2
+}
+
+git.changelog(){
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative ${1}..${2:master}
+}
+
 git.update.submodules(){
     for repo in `find . -maxdepth 2 -mindepth 2 -wholename '*/.git'`
     do
