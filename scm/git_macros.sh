@@ -13,6 +13,30 @@ git.newest.commit(){
     git log ${1:-master} -1 | head -1 | cut -d' ' -f 2
 }
 
+git.latest.pull.time(){
+    node -p 'require("fs").statSync("./.git/FETCH_HEAD").mtime.getTime()'
+}
+
+git.last.pull(){
+    PULLEDON=`git.previous.pull.date 2` #not this one, but the previous one
+    PULLEDONFORMATTED=`date -r ${PULLEDON} +"%m-%d-%Y"`
+    echo "$(tput setaf 6)Last Pull on ${PULLEDONFORMATTED}$(tput setaf 9)
+"
+    git --no-pager log --since=${PULLEDON}
+}
+
+git.previous.pull.date(){
+    node -p '(function(){var pulls = require("fs").readFileSync(".git/logs/HEAD").toString().split("\n").filter(function(line){ return line.indexOf("pull:") != -1 }); return /^([a-f0-9]+) ([a-f0-9]+) (.*) (<.*>) ([0-9]+) (-[0-9]{4})\t(.*)$/.exec(pulls[pulls.length-'${1}'])[5];})()'
+}
+
+git.log.line.timestamp(){
+    sudo node -p '/^([a-f0-9]+) ([a-f0-9]+) (.*) (<.*>) ([0-9]+) (-[0-9]{4})\t(.*)$/.exec("'${1}'")[4];'
+}
+
+git.last.fetched(){
+    git log --since="`git.latest.pull.time`"
+}
+
 git.changelog(){
     git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative ${1}..${2:master}
 }

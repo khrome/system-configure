@@ -25,5 +25,6 @@ source ${BASH_SOURCE%/*}/languages/nodejs_macros.sh
 #Applications
 source ${BASH_SOURCE%/*}/applications/things_macros.sh
 source ${BASH_SOURCE%/*}/applications/see_macros.sh
+source ${BASH_SOURCE%/*}/applications/chrome_macros.sh
 
 source ${BASH_SOURCE%/*}/web_dev.sh
