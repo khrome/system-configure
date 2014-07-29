@@ -25,13 +25,23 @@ git.last.pull(){
     git --no-pager log --since=${PULLEDON}
 }
 
+git.all.releases(){
+    node -e '(function(){require("child_process").exec("git branch -a | grep -F \"remotes/origin/release-\" -", function(err, result){ console.log(result.split("\n").map(function(item){ return item.trim().substring(23) }).filter(function(item){ return item !== "" }).join("\n")); }); return "";})()'
+}
+
+git.last.release(){
+    node -e '(function(){require("child_process").exec("git branch -a | grep -F \"remotes/origin/release-\" -", function(err, result){ console.log(result.split("\n").map(function(item){ return item.trim().substring(23) }).filter(function(item){ return item !== "" }).pop()); }); return "";})()'
+}
+
 git.previous.pull.date(){
-    node -p '(function(){var pulls = require("fs").readFileSync(".git/logs/HEAD").toString().split("\n").filter(function(line){ return line.indexOf("pull:") != -1 }); return /^([a-f0-9]+) ([a-f0-9]+) (.*) (<.*>) ([0-9]+) (-[0-9]{4})\t(.*)$/.exec(pulls[pulls.length-'${1}'])[5];})()'
+    node -e '(function(){var pulls = require("fs").readFileSync(".git/logs/HEAD").toString().split("\n").filter(function(line){ return line.indexOf("pull:") != -1 }); return /^([a-f0-9]+) ([a-f0-9]+) (.*) (<.*>) ([0-9]+) (-[0-9]{4})\t(.*)$/.exec(pulls[pulls.length-'${1}'])[5];})()'
 }
 
 git.log.line.timestamp(){
     sudo node -p '/^([a-f0-9]+) ([a-f0-9]+) (.*) (<.*>) ([0-9]+) (-[0-9]{4})\t(.*)$/.exec("'${1}'")[4];'
 }
+
+#git.release.report(){ }
 
 git.last.fetched(){
     git log --since="`git.latest.pull.time`"
@@ -74,6 +84,10 @@ git.init.attributes(){
 }
 
 git.current.build(){
+    echo $(git rev-list --all --max-count=1)
+}
+
+git.current.release(){
     echo $(git rev-list --all --max-count=1)
 }
 
