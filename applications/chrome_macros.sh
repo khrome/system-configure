@@ -2,13 +2,13 @@ chrome(){
     osascript -e "tell application \"Google Chrome\" to open location \"${1}\"" -e 'tell application "WebKit" to set bounds of front window to {10, 60, 1200, 800}'
 }
 
-chrome.updates.off(){
-    
-}
+#chrome.updates.off(){
 
-chrome.updates.on(){
-    
-}
+#}
+
+#chrome.updates.on(){
+
+#}
 
 chrome.cookies(){
 #XPATH='//dict[string and ./string[contains(., "'${1}'")]]'
@@ -29,9 +29,9 @@ chrome.cookies(){
         Id=`echo $ROW | awk '{split($0,a,"|"); print a[1]}'`
         Name=`echo $ROW | awk '{split($0,a,"|"); print a[2]}'`
         Value=`echo $ROW | awk '{split($0,a,"|"); print a[3]}'`
-     
+
         # Printing my data
         echo -e "\e[4m$Id\e[m) "$Name" -> "$Value;
-     
+
     done
 }

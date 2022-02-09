@@ -1,6 +1,54 @@
 ##############
 # GIT MACROS #
 ##############
+#for linking repos to a local RAID
+git.local.init(){
+    raid.create.repo $1
+}
+
+# push a single module repo to the raid server and attach it as a remote
+git.local.link.module(){
+    modulename=`node -p "require('$1/package.json').name"`
+    sshlogin=`raid.login.string`
+    sourcepath=`raid.source.path`
+    git.local.init $modulename #init a bare repo on the server
+    cd $1
+    git remote add raid "ssh://$sshlogin:$sourcepath/$modulename"
+    git push -u raid master
+    echo "linked $modulename."
+}
+
+# push a directory of module repos to the raid server and attach them as remotes
+git.local.link.dir(){
+    arrVar=()
+    for path in $1/*
+    do
+      if [[ -d "$path" ]]
+      then
+        if [ -d "$path/.git" ]; then
+          if [ -f "$path/package.json" ]; then
+            git.local.link.module $path
+          else
+            arrVar+=($path)
+          fi;
+        else
+          if [[ $path != *"/node_modules/"* ]]; then
+            git.local.link.dir $path
+          fi
+        fi;
+      fi
+    done
+    #echo "skipped:"
+    #for value in "${arrVar[@]}"
+    #do
+    #     echo $value
+    #done
+}
+
+git.local.link.this(){
+    git.local.link.dir `pwd`
+}
+
 git.current.tag(){
     echo $(git describe $(git rev-list --tags --max-count=1))
 }

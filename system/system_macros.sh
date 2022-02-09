@@ -32,6 +32,10 @@ dock.add(){
 
 alias system.kernel.extensions="kextstat -kl | awk ' !/apple/ { print $6 } '"
 
+finder.alias(){
+    echo "tell application \"Finder\" to make alias file to (POSIX file \"${1}\") at (POSIX file \"${2}\")"
+    osascript -e "tell application \"Finder\" to make alias file to (POSIX file \"${1}\") at (POSIX file \"${2}\")"
+}
 alias finder.kill='KillAll Finder'
 alias finder.hidden.show='defaults write com.apple.finder AppleShowAllFiles TRUE'
 alias finder.hidden.hide='defaults write com.apple.finder AppleShowAllFiles FALSE'
