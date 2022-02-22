@@ -18,6 +18,11 @@ system.os(){
     uname
 }
 
+system.info(){
+    osascript -e "set aFile to (POSIX file \"${1}\") as text" \
+          -e "tell application \"Finder\" to open information window of file aFile"
+}
+
 system.kernel.ext(){
     kextstat -kl | awk ' !/apple/ { print $6 } '
 }
