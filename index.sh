@@ -7,30 +7,37 @@
 ############################################
 
 #System
-source ${BASH_SOURCE%/*}/shell/shell_setup.sh
-source ${BASH_SOURCE%/*}/shell/shell_services.sh
+if [ -n "$ZSH_VERSION" ]; then
+   THIS_DIRECTORY=${${(%):-%x}%/*}
+elif [ -n "$BASH_VERSION" ]; then
+   THIS_DIRECTORY="${BASH_SOURCE%/*}"
+else
+   echo "NOT A RECOGNIZED SHELL";
+fi
+source ${THIS_DIRECTORY}/shell/shell_setup.sh
+source ${THIS_DIRECTORY}/shell/shell_services.sh
 
 #System
-source ${BASH_SOURCE%/*}/system/system_macros.sh
-source ${BASH_SOURCE%/*}/system/network_macros.sh
+source ${THIS_DIRECTORY}/system/system_macros.sh
+source ${THIS_DIRECTORY}/system/network_macros.sh
 
 #SCM
-source ${BASH_SOURCE%/*}/scm/git_macros.sh
+source ${THIS_DIRECTORY}/scm/git_macros.sh
 #source ${BASH_SOURCE%/*}/scm/svn_macros.sh
 
 #NETWORK
-source ${BASH_SOURCE%/*}/network/raid.sh
+source ${THIS_DIRECTORY}/network/raid.sh
 
 #Languages
-source ${BASH_SOURCE%/*}/languages/php_macros.sh
-source ${BASH_SOURCE%/*}/languages/nodejs_macros.sh
+source ${THIS_DIRECTORY}/languages/php_macros.sh
+source ${THIS_DIRECTORY}/languages/nodejs_macros.sh
 
 #Applications
 #source ${BASH_SOURCE%/*}/applications/things_macros.sh
 #source ${BASH_SOURCE%/*}/applications/see_macros.sh
-source ${BASH_SOURCE%/*}/applications/chrome_macros.sh
+source ${THIS_DIRECTORY}/applications/chrome_macros.sh
 
-source ${BASH_SOURCE%/*}/web_dev.sh
+source ${THIS_DIRECTORY}/web_dev.sh
 
 new.challenge(){
     cp -R ~/Development/challenge-boilerplate ~/Development/${1}
